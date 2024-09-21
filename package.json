@@ -1,0 +1,49 @@
+{
+  "name": "web-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18.12",
+    "pnpm": ">=9.5"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "math:dev": "pnpm -F math-project-vue dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "web-monorepo": "file:"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": ">=9.0.0 <=9.9.0"
+      }
+    }
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.2.1",
+    "unocss": "^0.62.4",
+    "@antfu/eslint-config": "^3.5.0",
+    "@eslint-react/eslint-plugin": "^1.10.1",
+    "@unocss/eslint-plugin": "^0.62.3",
+    "eslint": "^9.10.0",
+    "eslint-plugin-format": "^0.1.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7"
+  },
+    "simple-git-hooks": {
+      "pre-commit": "npx lint-staged"
+    },
+    "lint-staged": {
+      "*.js": "eslint --fix",
+      "*.ts": "eslint --fix",
+      "*.vue": "eslint --fix"
+    }   
+}
