@@ -1,46 +1,23 @@
+import messages from '@intlify/unplugin-vue-i18n/messages'
 import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
 import App from './App.vue'
+import i18nPlugin from './plugins/i18n'
+import router from './router'
 import './style.css'
 import 'virtual:uno.css'
 
-createApp(App).mount('#app')
-export function useDark() {
-  /** 开启暗黑模式 */
-  function enableDarkMode() {
-    // document.body.classList.add('dark-mode')
-    document.documentElement.classList.toggle('dark', true)
-    localStorage.setItem('color-scheme', 'dark')
-  }
 
-  /** 关闭暗黑模式 */
-  function disableDarkMode() {
-    // document.body.classList.remove('dark-mode')
-    document.documentElement.classList.toggle('dark', false)
-    localStorage.setItem('color-scheme', 'light')
-  }
+const i18n = createI18n({
+  legacy: false,
+  locale: 'ja', // 本地化的 Vue 应用程序的语言
+  fallbackLocale: 'zh-CN', // 找不到翻译 API 中指定的密钥资源时要回退到的语言
+  messages,
+})
 
-  /**
-   * 应用保存的主题
-   * 通常在页面加载时调用
-   */
-  function applySavedTheme() {
-    const savedTheme = localStorage.getItem('color-scheme')
-    if (savedTheme === 'dark') {
-      enableDarkMode()
-    }
-    else if (savedTheme === 'light') {
-      disableDarkMode()
-    }
-  }
+const app = createApp(App)
 
-  // 检测系统是否偏好深色模式
-  const prefersDarkScheme = () => {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-  }
-
-  return {
-    enableDarkMode,
-    disableDarkMode,
-    applySavedTheme,
-  }
-}
+app.use(router)
+app.use(i18nPlugin)
+app.use(i18n)
+app.mount('#app')

@@ -1,14 +1,20 @@
 <script lang="ts" setup>
-import type { ZhiHuHot, ZhiHuHotList } from '../types/zhihu'
+import type { ZhiHuHot, ZhiHuHotList } from '@/types/zh'
 import { onMounted, ref } from 'vue'
 
 const list = ref<ZhiHuHot[]>([])
 
 const getData = async () => {
+  // const url = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=1&desktop=true";
   const url = '/api/v3/feed/topstory/hot-lists/total'
-  const response = await fetch(url)
-  const res: ZhiHuHotList = await response.json()
-  list.value = res.data
+  try {
+    const response = await fetch(url, { mode: 'no-cors' })
+    const res: ZhiHuHotList = await response.json()
+    list.value = res.data
+  }
+  catch (error) {
+    console.log('Request Failed', error)
+  }
 }
 
 onMounted(() => {
@@ -21,25 +27,36 @@ const toggleHot = (id: number) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 p-4">
-    <section v-for="(item, index) in list" :key="item.id" class="relative flex cursor-pointer items-start border border-green-200 rounded-lg bg-green-100 p-4 shadow-sm transition-all duration-300 hover:bg-green-200 hover:shadow-md" @click="toggleHot(item.target.id)">
-      <img :src="item.children[0].thumbnail" alt="" class="mr-4 h-20 w-20 rounded-md object-cover">
-      <div class="flex flex-1 items-start">
-        <span class="mr-4 text-gray-800 font-bold">{{ index + 1 }}</span>
-        <div class="flex-1 break-words">
-          <h1 class="line-clamp-2 mb-2 overflow-hidden whitespace-normal break-words text-left text-lg text-gray-800 font-bold">
-            {{ item.target.excerpt }}
-          </h1>
-          <p class="text-indent-4 mb-2 min-h-20 overflow-hidden whitespace-normal break-words text-left text-base text-gray-600">
-            {{ item.target.excerpt }}
-          </p>
-          <div class="min-h-10 whitespace-normal break-words text-left text-sm text-gray-500">
-            {{ item.detail_text }}
-          </div>
+  <div class="flex flex-col gap-2 p-5">
+    <section
+      v-for="(item, index) in list"
+      :key="item.id"
+      class="hot cursor-pointer bg-blue-4 sm:bg-#a992d5"
+      @click="toggleHot(item.target.id)"
+    >
+      <span>{{ index + 1 }}</span>
+      <div>
+        <h1 class="line-clamp-2 text-start text-lg">
+          {{ item.target.title }}
+        </h1>
+        <p class="line-clamp-1">
+          {{ item.target.excerpt }}
+        </p>
+        <div text-start>
+          {{ item.detail_text }}
         </div>
       </div>
+      <img :src="item.children[0].thumbnail" aspect-ratio="4/3" ml-auto w-45 rounded-md>
     </section>
   </div>
 </template>
 
-
+<style scoped>
+.hot {
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+</style>
